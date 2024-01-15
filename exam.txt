@@ -1176,3 +1176,101 @@ public class ddaAlg {
         ddaAlg(x0, y0, x1, y1);
     }
 } 
+
+
+//pic
+
+import java.applet.*;
+import java.awt.*;
+import java.util.*;
+import java.applet.Applet;
+
+public class new1 extends Applet{
+	int centerX,centerY;
+
+    void initgr(){
+        Dimension d = getSize();
+        centerX = d.width/2;
+        centerY = d.height/2;
+    }
+
+    void drawLine(Graphics g,int x0,int y0,int x1,int y1){
+        int dx = Math.abs(x1 - x0);
+        int dy = Math.abs(y1 - y0);
+        int sx = (x0 < x1) ? 1 : -1;
+        int sy = (y0 < y1) ? 1 : -1;
+        int err = dx - dy;
+
+        while (true) {
+
+            g.fillOval((int)x0,(int)y0,5,5);
+            if (x0 == x1 && y0 == y1) break;
+
+            int e2 = 2 * err;
+            if (e2 > -dy) {
+                err = err - dy;
+                x0 = x0 + sx;
+            }
+
+            if (e2 < dx) {
+                err = err + dx;
+                y0 = y0 + sy;
+            }
+        }
+    
+
+
+    }
+    void bresenhamcircleDrawing(Graphics g,int x0,int y0,int r){
+		int x=0;
+		int y=r;
+		int d=3-2*r;
+
+		while(x<=y){
+			g.fillOval(x+x0,y+y0,5,5);
+			g.fillOval(y+x0,x+y0,5,5);
+			g.fillOval(x+x0,-y+y0,5,5);
+			g.fillOval(y+x0,-x+y0,5,5);
+			g.fillOval(-x+x0,y+y0,5,5);
+			g.fillOval(-y+x0,x+y0,5,5);
+			g.fillOval(-x+x0,-y+y0,5,5);
+			g.fillOval(-y+x0,-x+y0,5,5); 
+			
+
+			if(d<0){
+				d=d+4*x+6;
+			}
+			else{
+				d=d+4*(x-y)+10;
+				y--;
+			}
+			x++;
+		}
+	}
+
+    public void paint(Graphics g) {
+		initgr();
+	
+		
+
+        drawLine(g,centerX, centerY, centerX+100, centerY);
+        drawLine(g,centerX+100, centerY, centerX+100, centerY-200);
+        drawLine(g,centerX+100, centerY-200, centerX, centerY-200);
+        drawLine(g,centerX, centerY-200, centerX, centerY);
+
+        drawLine(g,centerX+100, centerY-200, centerX+150, centerY-250);
+        drawLine(g,centerX+150, centerY-250, centerX+50, centerY-250);
+        drawLine(g,centerX+50, centerY-250, centerX, centerY-200);
+		
+		drawLine(g,centerX+150, centerY-250, centerX+150, centerY-50);
+		drawLine(g,centerX+150, centerY-50, centerX+100, centerY);
+
+		bresenhamcircleDrawing(g, centerX+50, centerY-100, 50);
+        bresenhamcircleDrawing(g, centerX+70, centerY-225, 23); 
+		bresenhamcircleDrawing(g, centerX+125, centerY-125, 23); 
+	}	
+
+}
+
+/*<applet code="new1.class" width="1000" height="1000">
+ </applet>*/
