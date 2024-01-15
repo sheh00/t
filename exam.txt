@@ -127,7 +127,7 @@ void drawLine(Graphics g, int x0, int y0, int x1, int y1) { // Bresenhams Algori
 }
 
 /*<applet code="bresenhams.class" width="1000" height="1000">
- </applet>
+ </applet>*/
 
 
 
@@ -139,56 +139,64 @@ import java.util.*;
 import java.awt.*;
 import java.applet.*;
 
-public class MidpointCircle extends Applet{
-	int centerX,centerY;
-	void initgr(){
+public class Midcir extends Applet{	
+	
+	int xc,yc,r,d,xend,x,y;
+	int maxX,maxY,centerX,centerY;
+	
+	
+	public void shape(){
+	}
+	public void initgr(){
 		Dimension d;
-		d=getSize();
-		centerX=(d.width-1)/2;
-		centerY=(d.height-1)/2;
-	}
-
-	public void plotCircle(Graphics g,int h,int k,int x,int y){
-
-		 g.fillOval(x+h,y+k,5,5);
-		 g.fillOval(x+h,-y+k,5,5);
-		 g.fillOval(-x+h,y+k,5,5);
-		 g.fillOval(-x+h,-y+k,5,5);
-		 
-		 g.fillOval(y+h,x+k,5,5);
-		 g.fillOval(-y+h,x+k,5,5);
-		 g.fillOval(y+h,-x+k,5,5);
-		 g.fillOval(-y+h,-x+k,5,5);
+		d = getSize();
+		maxX = d.width-1;
+		maxY = d.height-1;
+		centerX = maxX/2;
+		centerY = maxY/2;
 
 	}
-
-	public void drawCircle(Graphics g,int h,int k,int radias){
-		int x=0;
-		int y=radias;
-		int p=(1-radias);
-		plotCircle(g,h,k,x,y);
-		while(x<=y){
-			if(p<0){
-				p=p*2*x;
-			}else{
-				p=p*2*x-2*y;
-				y-=1;
+	
+	public void drawcir(Graphics g, int xc,int yc,int r){
+		x=0;
+		y=r;
+		
+		d=1-r;
+		xend = (int)(r/Math.sqrt(2));
+		
+		for(x=0; x<=y; x++){
+			g.fillOval(xc+x, yc+y, 5,5);
+			g.fillOval(xc+x, yc-y, 5,5);
+			g.fillOval(xc+y, yc+x, 5,5);
+			g.fillOval(xc+y, yc-x, 5,5);
+			g.fillOval(xc-x, yc+y, 5,5);
+			g.fillOval(xc-x, yc-y, 5,5);
+			g.fillOval(xc-y, yc+x, 5,5);
+			g.fillOval(xc-y, yc-x, 5,5);
+			
+			if(d>0){
+				d=d+2*x-2*y+1;
+				y=y-1;
 			}
-			x+=1;
-
-			plotCircle(g,h,k,x,y);
+			else{
+				d=d+2*x+1;
+				y=y;
+			}
 		}
 	}
-
+	
 	public void paint(Graphics g){
 		initgr();
-		drawCircle(g,centerX,centerY,100);
+		
+		
+		drawcir(g,centerX,centerY,75);
+		
+		
 	}
 }
-
-/*<applet code="MidpointCircle.class" width="1000" height="1000"></applet>
+/*
+<applet code="Midcir.class" width="1000" height="1000"></applet>
 */
-
 
 
 
@@ -594,7 +602,7 @@ public class Q2 extends Applet{
 
 
 
-//Q1 2017
+//Q1 2017 (dda)
 
 import java.applet.Applet;
 import java.awt.*;
@@ -686,9 +694,108 @@ public class Q1 extends Applet{
 
 /*<applet code="Q1.class" width="1000" height="1000"></applet>
  */
+
+//bresenham 2017
+
+
+import java.applet.Applet;
+import java.awt.*;
+
+public class new2 extends Applet{
+    public int centerX,centerY;
+    public void initgr(){
+        Dimension d = getSize();
+        centerX = d.width/2;
+        centerY = d.height/2;
+    }
+	public void drawLine(Graphics g,int x0,int y0,int x1,int y1){
+        int dx = Math.abs(x1 - x0);
+        int dy = Math.abs(y1 - y0);
+        int sx = (x0 < x1) ? 1 : -1;
+        int sy = (y0 < y1) ? 1 : -1;
+        int err = dx - dy;
+
+        while (true) {
+
+            g.fillOval((int)x0,(int)y0,5,5);
+            if (x0 == x1 && y0 == y1) break;
+
+            int e2 = 2 * err;
+            if (e2 > -dy) {
+                err = err - dy;
+                x0 = x0 + sx;
+            }
+
+            if (e2 < dx) {
+                err = err + dx;
+                y0 = y0 + sy;
+            }
+        }
+    
+
+
+    }
+    
+
+    public void translatePoint(Graphics g, int p[],int t[]){
+        
+         p[0] += t[0];
+         p[1] += t[1];
+    }
+
+    public void traslateLine(Graphics g,int p[][], int t[]){
+        //for(int i=0;i<2;i++){
+			for(int i=0;i<p.length;i++){
+            p[i][0]+=t[0];
+            p[i][1]+=t[1];
+        }
+    }
+
+    public void scale(Graphics g, int x[],int y[],int sx,int sy){
+        for(int j=0;j<x.length;j++){
+            x[j] *= sx;
+            y[j] *= sy;
+            
+        }
+    }
+
+
+    public void rotate(float[][] points, int x_pivot, int y_pivot, int angle) {
+        double radians = Math.toRadians(angle);
+
+        for (float[] point : points) {
+            // Translate the point to the origin (subtract pivot coordinates)
+            float xTranslated = point[0] - x_pivot;
+            float yTranslated = point[1] - y_pivot;
+
+            // Rotate the translated point
+            float xRotated = (float) (xTranslated * Math.cos(radians) - yTranslated * Math.sin(radians));
+            float yRotated = (float) (xTranslated * Math.sin(radians) + yTranslated * Math.cos(radians));
+
+            // Translate the rotated point back to the original position (add pivot coordinates)
+            point[0] = xRotated + x_pivot;
+            point[1] = yRotated + y_pivot;
+        }
+    }
+
+    public void paint(Graphics g){
+        initgr();
+        //dda(g, centerX, centerY, centerX+100, centerY-200);
+        int p[]={centerX+100,centerY+100};
+        g.fillOval(p[0],p[1],15,15);
+        int t[]={100,0};
+        translatePoint(g, p, t);
+        g.fillOval(p[0],p[1],50,50);
+    }
+}
+
+/*<applet code="new2.class" width="1000" height="1000"></applet>
+ */
  
  
-//Q2 2017
+ 
+ 
+//Q2 2017 (dda)
 import java.applet.Applet;
 import java.awt.*;
 
@@ -804,9 +911,129 @@ public class Q2 extends Applet {
 
 /*<applet code="Q2.class" width="1000" height="1000"></applet>
  */
- 
+
+//bresenham 2017
+
+
  
 //translate rectangle.
+import java.applet.Applet;
+import java.awt.*;
+
+public class new23 extends Applet {
+    int centerX,centerY;
+    new2 New2 = new new2();
+    public void initgr(){
+        Dimension d = getSize();
+        centerX = d.width/2;
+        centerY = d.height/2;
+    }
+
+    public void reflect(int [][] point, char axis){
+        for(int i=0;i<point.length;i++){
+            switch (axis) {
+            case 'x':
+                // Reflect across the x-axis
+                point[i][1]=-1*point[i][1];
+                break;
+            case 'y':
+                // Reflect across the y-axis
+                point[i][0]=-1*point[i][0];
+                break;
+           
+        }
+        }
+    }
+   
+
+    public void drawTrangle(int [][]point,Graphics g){
+       
+        New2.drawLine(g,centerX+point[0][0] ,centerY+point[0][1] ,centerX+point[1][0] , centerY+point[1][1]);
+        New2.drawLine(g,centerX+point[1][0] ,centerY+point[1][1] ,centerX+point[2][0] , centerY+point[2][1]);
+        New2.drawLine(g,centerX+point[2][0] ,centerY+point[2][1] ,centerX+point[0][0] , centerY+point[0][1]);
+        
+    }
+
+    int [][] floatToInt (float [][] arr){
+        int rows = arr.length;
+        int col = arr[0].length;
+        int [][]arr2 = new int[rows][col];
+        
+        for(int i=0;i<rows;i++){
+            for(int j=0;j<col;j++){
+                arr2[i][j] = Math.round(arr[i][j]);
+                System.out.println(arr2[i][j]);
+            }
+        }
+        return arr2;
+    }
+
+    float [][] intToFloat (int [][] arr){
+        int rows = arr.length;
+        int col = arr[0].length;
+        float [][]arr2 = new float[rows][col];
+        
+        for(int i=0;i<rows;i++){
+            for(int j=0;j<col;j++){
+                arr2[i][j] = (float)(arr[i][j]);
+                //System.out.println(arr2[i][j]);
+            }
+        }
+        return arr2;
+    }
+    
+
+    public void paint(Graphics g){
+        initgr();
+        
+        int [][] t ={{0,0},{100,0},{50,86}};
+        int [][] t2 ={{0,0},{100,0},{50,86}};
+        drawTrangle(t, g);
+
+        int trans[] = {300,-300};
+        New2.traslateLine(g, t2,trans);
+        drawTrangle(t2, g);
+
+        float f[][] = intToFloat(t);
+        New2.rotate(f, 0,200,30);
+        int [][] arr =floatToInt(f);
+        int trans2[] = {300,-200};
+        New2.traslateLine(g, arr, trans2);
+        drawTrangle(arr, g);
+
+        int [][] scaled=new int[3][2];
+        int [] x = new int[1];
+        int [] y = new int[1];
+
+        for(int i=0;i<t.length;i++){
+            int x1,y1;
+            int temp = t[i][0];
+            x[0]= temp;
+            temp = t[i][1];
+            y[0]= temp;
+
+            New2.scale(g, x, y, 2, 2);
+            x1=x[0];
+            scaled[i][0] = x1;
+            y1=y[0];
+            scaled[i][1] = y1;
+        }
+        int trans3[] = {300,-10};
+        New2.traslateLine(g, scaled, trans3);
+        drawTrangle(scaled, g);
+
+
+       reflect(t, 'y');
+        drawTrangle(t, g);
+            
+    }
+    
+}
+
+/*<applet code="new23.class" width="1000" height="1000"></applet>
+ */
+
+
 
 
 import java.util.Arrays;
