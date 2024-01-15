@@ -1,0 +1,951 @@
+// dda drawing
+
+import java.applet.*;
+import java.awt.*;
+import java.util.*;
+
+public class ddaalg extends Applet{
+	int centerX, centerY, dGrid = 1, maxX, maxY;
+    
+void initgr() {
+	Dimension d;	// get the window size and compute minimum, maximum and center
+	d = getSize();
+	maxX = d.width - 1; 
+	maxY = d.height - 1;
+	centerX = maxX/2; centerY = maxY/2;
+   	}
+	
+void drawLine(Graphics g, int x1, int y1, int x2, int y2) { // DDA Algorithm 
+	double xc,yc;
+	double dx,dy,steps,x,y,k;
+	
+	dx=x2-x1;
+	dy=y2-y1;
+    
+	if(Math.abs(dx)>Math.abs(dy))
+		steps=Math.abs(dx);
+	else
+		steps=Math.abs(dy);
+        
+		xc=(dx/steps);
+		yc=(dy/steps);
+		x=x1;
+		y=y1;
+    	    
+	for(k=1;k<=steps;k++){
+		x=x+xc;
+		y=y+yc;
+		g.fillOval((int)x,(int)y,5,5);
+	}	
+}
+
+	public void paint(Graphics g) {
+		initgr();
+		drawLine(g, centerX-100, centerY-100, centerX+100, centerY-100);
+		//drawLine(g, centerX+100, centerY-100, centerX+100, centerY+100);
+		//drawLine(g, centerX+100, centerY+100, centerX-100, centerY+100);
+		//drawLine(g, centerX-100, centerY+100, centerX-100, centerY-100);
+		
+		//drawLine(g, centerX, centerY-240, centerX+240, centerY+100);
+		//drawLine(g, centerX, centerY-240, centerX-240, centerY+100);
+		//drawLine(g, centerX-240, centerY+100, centerX+240, centerY+100);
+		
+		//drawCircle(g, 230, 100, 40);
+	}	
+
+}
+
+/*<applet code="ddaalg.class" width="1000" height="1000">
+ </applet>
+
+ */
+
+
+
+ 
+//bresenham line
+
+import java.applet.*;
+import java.awt.*;
+import java.util.*;
+
+public class bresenhams extends Applet{
+	int centerX, centerY, dGrid = 1, maxX, maxY;
+    
+/*void initgr() {
+	Dimension d;	// get the window size and compute minimum, maximum and center
+	d = getSize();
+	maxX = d.width - 1; 
+	maxY = d.height - 1;
+	centerX = maxX/2; centerY = maxY/2;
+   	}*/
+	
+void drawLine(Graphics g, int x0, int y0, int x1, int y1) { // Bresenhams Algorithm 
+    int dx, dy, p, x, y;
+ 
+	dx=x1-x0;
+	dy=y1-y0;
+ 
+	x=x0;
+	y=y0;
+ 
+	p=2*dy-dx;
+ 
+	while(x<x1)
+	{
+		if(p>=0)
+		{
+			g.fillOval((int)x,(int)y,5,5);
+			y=y+1;
+			p=p+2*dy-2*dx;
+		}
+		else
+		{
+			g.fillOval((int)x,(int)y,5,5);
+			p=p+2*dy;
+		}
+		x=x+1;
+	}
+}
+
+	public void paint(Graphics g) {
+		//initgr();
+		/*drawLine(g, centerX-100, centerY-100, centerX+100, centerY-100);
+		drawLine(g, centerX+100, centerY-100, centerX+100, centerY+100);
+		drawLine(g, centerX+100, centerY+100, centerX-100, centerY+100);
+		drawLine(g, centerX-100, centerY+100, centerX-100, centerY-100);
+		
+		drawLine(g, centerX, centerY-240, centerX+240, centerY+100);
+		drawLine(g, centerX, centerY-240, centerX-240, centerY+100);
+		drawLine(g, centerX-240, centerY+100, centerX+240, centerY+100);*/
+		
+		//drawLine(g, 100, 100, 500, 1000);
+		drawLine(g, 500, 500, 1500, 800);
+		
+	}	
+
+}
+
+/*<applet code="bresenhams.class" width="1000" height="1000">
+ </applet>
+
+
+
+
+//midpoint circle 
+
+
+import java.util.*;
+import java.awt.*;
+import java.applet.*;
+
+public class MidpointCircle extends Applet{
+	int centerX,centerY;
+	void initgr(){
+		Dimension d;
+		d=getSize();
+		centerX=(d.width-1)/2;
+		centerY=(d.height-1)/2;
+	}
+
+	public void plotCircle(Graphics g,int h,int k,int x,int y){
+
+		 g.fillOval(x+h,y+k,5,5);
+		 g.fillOval(x+h,-y+k,5,5);
+		 g.fillOval(-x+h,y+k,5,5);
+		 g.fillOval(-x+h,-y+k,5,5);
+		 
+		 g.fillOval(y+h,x+k,5,5);
+		 g.fillOval(-y+h,x+k,5,5);
+		 g.fillOval(y+h,-x+k,5,5);
+		 g.fillOval(-y+h,-x+k,5,5);
+
+	}
+
+	public void drawCircle(Graphics g,int h,int k,int radias){
+		int x=0;
+		int y=radias;
+		int p=(1-radias);
+		plotCircle(g,h,k,x,y);
+		while(x<=y){
+			if(p<0){
+				p=p*2*x;
+			}else{
+				p=p*2*x-2*y;
+				y-=1;
+			}
+			x+=1;
+
+			plotCircle(g,h,k,x,y);
+		}
+	}
+
+	public void paint(Graphics g){
+		initgr();
+		drawCircle(g,centerX,centerY,100);
+	}
+}
+
+/*<applet code="MidpointCircle.class" width="1000" height="1000"></applet>
+*/
+
+
+
+
+// Bresenham's line drawing algorithm m>1
+
+public class BresenhamLineDrawing {
+    public static void drawLine(int x1, int y1, int x2, int y2) {
+        int dx = Math.abs(x2 - x1);
+        int dy = Math.abs(y2 - y1);
+        int sx = (x1 < x2) ? 1 : -1;
+        int sy = (y1 < y2) ? 1 : -1;
+
+        int error = dx - dy;
+        int currentX = x1;
+        int currentY = y1;
+
+        int step = 0;
+
+        while (true) {
+            System.out.println("(" + currentX + ", " + currentY + ")");
+            
+            if (++step >= 10) {
+                break;
+            }
+
+            if (currentX == x2 && currentY == y2) {
+                break;
+            }
+
+            int e2 = 2 * error;
+            
+            if (e2 > -dy) {
+                error -= dy;
+                currentX += sx;
+            }
+            
+            if (e2 < dx) {
+                error += dx;
+                currentY += sy;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        int x1 = 2;
+        int y1 = 2;
+        int x2 = 10;
+        int y2 = 15;
+
+        System.out.println("Coordinates of the line:");
+        drawLine(x1, y1, x2, y2);
+    }
+}
+
+
+// bresenham circle 
+
+import java.applet.Applet;
+import java.awt.Graphics;
+
+public class BresenhamCircle extends Applet {
+    private int maxX, maxY, centerX, centerY;
+
+    public void initgr() {
+       
+        java.awt.Dimension d = getSize();
+        maxX = d.width - 1;
+        maxY = d.height - 1;
+        centerX = maxX / 2;
+        centerY = maxY / 2;
+    }
+
+    public void paint(Graphics g) {
+        initgr(); 
+
+        int radius = 100;
+
+        int x = 0;
+        int y = radius;
+        int d = 3 - 2 * radius;
+
+        while (x <= y) {
+            plotCircle(g, centerX, centerY, x, y);
+            x++;
+
+            if (d > 0) {
+                y--;
+                d = d + 4 * (x - y) + 10;
+            } else {
+                d = d + 4 * x + 6;
+            }
+
+            plotCircle(g, centerX, centerY, x, y);
+        }
+    }
+
+    // circle
+    void plotCircle(Graphics g, int xCenter, int yCenter, int x, int y) {
+        g.fillRect(xCenter + x, yCenter + y, 5, 5);
+        g.fillRect(xCenter - x, yCenter + y, 5, 5);
+        g.fillRect(xCenter + x, yCenter - y, 5, 5);
+        g.fillRect(xCenter - x, yCenter - y, 5, 5);
+        g.fillRect(xCenter + y, yCenter + x, 5, 5);
+        g.fillRect(xCenter - y, yCenter + x, 5, 5);
+        g.fillRect(xCenter + y, yCenter - x, 5, 5);
+        g.fillRect(xCenter - y, yCenter - x, 5, 5);
+    }
+}
+
+/*<applet code="BresenhamCircle.class" width="1000" height="1000">
+ </applet>
+
+ */
+ 
+ 
+ 
+//Q1 2018
+
+import java.applet.*;
+import java.awt.*;
+import java.util.*;
+import java.applet.Applet;
+
+public class Q1 extends Applet{
+	int centerX,centerY;
+
+    void initgr(){
+        Dimension d = getSize();
+        centerX = d.width/2;
+        centerY = d.height/2;
+    }
+
+    void drawLine(Graphics g,int x0,int y0,int x1,int y1){
+        int dx = Math.abs(x1 - x0);
+        int dy = Math.abs(y1 - y0);
+        int sx = (x0 < x1) ? 1 : -1;
+        int sy = (y0 < y1) ? 1 : -1;
+        int err = dx - dy;
+
+        while (true) {
+
+            g.fillOval((int)x0,(int)y0,5,5);
+            if (x0 == x1 && y0 == y1) break;
+
+            int e2 = 2 * err;
+            if (e2 > -dy) {
+                err = err - dy;
+                x0 = x0 + sx;
+            }
+
+            if (e2 < dx) {
+                err = err + dx;
+                y0 = y0 + sy;
+            }
+        }
+    
+
+
+    }
+    void bresenhamcircleDrawing(Graphics g,int x0,int y0,int r){
+		int x=0;
+		int y=r;
+		int d=3-2*r;
+
+		while(x<=y){
+			g.fillOval(x+x0,y+y0,5,5);
+			g.fillOval(y+x0,x+y0,5,5);
+			g.fillOval(x+x0,-y+y0,5,5);
+			g.fillOval(y+x0,-x+y0,5,5);
+			g.fillOval(-x+x0,y+y0,5,5);
+			g.fillOval(-y+x0,x+y0,5,5);
+			g.fillOval(-x+x0,-y+y0,5,5);
+			g.fillOval(-y+x0,-x+y0,5,5); 
+			
+
+			if(d<0){
+				d=d+4*x+6;
+			}
+			else{
+				d=d+4*(x-y)+10;
+				y--;
+			}
+			x++;
+		}
+	}
+
+    public void paint(Graphics g) {
+		initgr();
+	
+		drawLine(g,centerX, centerY, centerX+300, centerY-300);
+
+        drawLine(g,centerX, centerY, centerX-200, centerY);
+        drawLine(g,centerX-200, centerY, centerX-200, centerY+200);
+        drawLine(g,centerX-200, centerY+200, centerX, centerY+200);
+        drawLine(g,centerX, centerY+200, centerX, centerY);
+
+        drawLine(g,centerX-100, centerY, centerX+71, centerY+342);
+        drawLine(g,centerX-100, centerY, centerX-100, centerY+342);
+        drawLine(g,centerX-100, centerY+342, centerX+71, centerY+342);
+
+		bresenhamcircleDrawing(g, centerX+71, centerY-71, 100);
+        bresenhamcircleDrawing(g, centerX+(71*3), centerY-(71*3), 100);
+	}	
+
+}
+
+/*<applet code="Q1.class" width="1000" height="1000">
+ </applet>*/
+ 
+ 
+//Q2 2018
+
+import java.applet.*;
+import java.awt.*;
+import java.util.*;
+import java.applet.Applet;
+
+public class Q2 extends Applet{
+    int centerX, centerY, dGrid = 1, maxX, maxY;
+    void initgr() {
+			// get the window size and compute minimum, maximum and center
+		Dimension d =getSize();
+		maxX = d.width ; 
+		maxY = d.height ;
+		centerX = maxX/2; centerY = maxY/2;
+	}
+    void drawLine(Graphics g,int x0,int y0,int x1,int y1){
+        int dx = Math.abs(x1 - x0);
+        int dy = Math.abs(y1 - y0);
+        int sx = (x0 < x1) ? 1 : -1;
+        int sy = (y0 < y1) ? 1 : -1;
+        int err = dx - dy;
+
+        while (true) {
+
+            g.fillOval((int)x0,(int)y0,5,5);
+            if (x0 == x1 && y0 == y1) break;
+
+            int e2 = 2 * err;
+            if (e2 > -dy) {
+                err = err - dy;
+                x0 = x0 + sx;
+            }
+
+            if (e2 < dx) {
+                err = err + dx;
+                y0 = y0 + sy;
+            }
+        }
+    
+    }
+        
+     void drawRectangle(int[][] coordinates,Graphics g) {
+        
+            int x1 = coordinates[0][0];
+            int y1 = coordinates[0][1];
+            int x2 = coordinates[1][0];
+            int y2 = coordinates[1][1];
+            int x3 = coordinates[2][0];
+            int y3 = coordinates[2][1];
+            int x4 = coordinates[3][0];
+            int y4 = coordinates[3][1];
+            
+            
+            
+
+            drawLine(g,centerX+x1, centerY+y1, centerX+x2, centerY+y2);
+            drawLine(g,centerX+x2, centerY+y2, centerX+x3, centerY+y3);
+            drawLine(g,centerX+x3, centerY+y3, centerX+x4, centerY+y4);
+            drawLine(g,centerX+x4, centerY+y4, centerX+x1, centerY+y1);
+
+        
+
+    }
+
+    
+
+     void rotate(float[][] points, int x_pivot, int y_pivot, int angle) {
+        double radians = Math.toRadians(angle);
+
+        for (float[] point : points) {
+            // Translate the point to the origin (subtract pivot coordinates)
+            float xTranslated = point[0] - x_pivot;
+            float yTranslated = point[1] - y_pivot;
+
+            // Rotate the translated point
+            float xRotated = (float) (xTranslated * Math.cos(radians) - yTranslated * Math.sin(radians));
+            float yRotated = (float) (xTranslated * Math.sin(radians) + yTranslated * Math.cos(radians));
+
+            // Translate the rotated point back to the original position (add pivot coordinates)
+            point[0] = xRotated + x_pivot;
+            point[1] = yRotated + y_pivot;
+        }
+    }
+
+    
+    static void translateRectangle(int[][] pos, int[] trans) {
+        for (int i = 0; i < pos.length; i++) {
+            pos[i][0] += trans[0];
+            pos[i][1] += trans[1];
+        }
+    }
+
+    
+    void scalePoint(int x[], int y[], int sx, int sy) {
+        for (int i = 0; i < x.length; i++) {
+            x[i] *= sx;
+            y[i] *= sy;
+        }
+    }
+
+    
+    
+    static void scale(int[][] points, int sx, int sy) {
+        for (int i = 0; i < points.length; i++) {
+            points[i][0] *= sx;
+            points[i][1] *= sy;
+        }
+    }
+
+
+     float[][] convertIntArrayToFloatArray(int[][] intArray) {
+        int numRows = intArray.length;
+        int numCols = intArray[0].length;
+
+        float[][] floatArray = new float[numRows][numCols];
+
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
+                floatArray[i][j] = (float) intArray[i][j]; // Casting int to float
+            }
+        }
+
+        return floatArray;
+    }
+
+
+     int[][] convertFloatArrayToIntArray(float[][] floatArray) {
+        int numRows = floatArray.length;
+        int numCols = floatArray[0].length;
+
+        int[][] intArray = new int[numRows][numCols];
+
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
+                intArray[i][j] = Math.round(floatArray[i][j]); // Using Math.round() to round to the nearest int
+            }
+        }
+
+        return intArray;
+    }
+
+    
+
+    public void paint(Graphics g) {
+		initgr();
+        
+        
+        int[][] rectan = {{0,0},{100,0},{100,50},{0,50}};
+
+
+        drawRectangle(rectan, g);
+
+        float[][] aft =convertIntArrayToFloatArray(rectan);
+
+        rotate(aft, 0,0, -45);
+
+        int [][] afterRotate = convertFloatArrayToIntArray(aft);
+
+        drawRectangle(afterRotate, g);
+
+        int [] t= {100,-100};
+ 
+        translateRectangle(afterRotate,t);
+
+        drawRectangle(afterRotate, g);
+
+        for(int i=0; i<rectan.length;i++){
+            int [] tempX = {rectan[i][0]};
+            int [] tempY = {rectan[i][1]};
+
+            scalePoint(tempX,tempY, 3, 3);
+
+            rectan[i][0]=tempX[0];
+            rectan[i][1]=tempY[0];
+        }
+        
+        // scale(rectan, 5,5 );
+
+        int [] t2= {300,0};
+
+        translateRectangle(rectan,t2);
+
+        drawRectangle(rectan, g);
+		
+	}	
+
+
+}
+/*<applet code="Q2.class" width="1000" height="1000">
+ </applet>*/
+
+
+
+
+//Q1 2017
+
+import java.applet.Applet;
+import java.awt.*;
+
+public class Q1 extends Applet{
+    int centerX,centerY;
+    public void initgr(){
+        Dimension d = getSize();
+        centerX = d.width/2;
+        centerY = d.height/2;
+    }
+    public void dda(Graphics g,int x0,int y0,int x1,int y1){
+        double step;
+        double xinc,yinc,x,y;
+        int dx = (x1 - x0);
+        int dy = (y1 - y0);
+
+        if(Math.abs(dx)>Math.abs(dy)){
+            step = Math.abs(dx);
+        }else{
+            step = Math.abs(dy);
+            xinc = (double)dx/step;
+            //System.out.println(xinc);
+            yinc = (double)dy/step;
+
+            x= x0;
+            y=y0;
+
+            for(int i=0; i<step;i++){
+                g.fillOval((int)x,(int)y,5,5);
+                x=x+xinc;
+                y=y+yinc;
+                //System.out.println(x+" "+y);
+            }
+
+        }
+    }
+
+    public void translatePoint(Graphics g, int p[],int t[]){
+        
+         p[0] += t[0];
+         p[1] += t[1];
+    }
+
+    public void traslateLine(Graphics g,int p[][], int t[]){
+        for(int i=0;i<2;i++){
+            p[i][0]+=t[0];
+            p[i][1]+=t[1];
+        }
+    }
+
+    public void scale(Graphics g, int x[],int y[],int sx,int sy){
+        for(int j=0;j<x.length;j++){
+            x[j] *= sx;
+            y[j] *= sy;
+            
+        }
+    }
+
+
+    public void rotate(float[][] points, int x_pivot, int y_pivot, int angle) {
+        double radians = Math.toRadians(angle);
+
+        for (float[] point : points) {
+            // Translate the point to the origin (subtract pivot coordinates)
+            float xTranslated = point[0] - x_pivot;
+            float yTranslated = point[1] - y_pivot;
+
+            // Rotate the translated point
+            float xRotated = (float) (xTranslated * Math.cos(radians) - yTranslated * Math.sin(radians));
+            float yRotated = (float) (xTranslated * Math.sin(radians) + yTranslated * Math.cos(radians));
+
+            // Translate the rotated point back to the original position (add pivot coordinates)
+            point[0] = xRotated + x_pivot;
+            point[1] = yRotated + y_pivot;
+        }
+    }
+
+    public void paint(Graphics g){
+        initgr();
+        //dda(g, centerX, centerY, centerX+100, centerY-200);
+        int p[]={centerX+100,centerY+100};
+        g.fillOval(p[0],p[1],15,15);
+        int t[]={100,0};
+        translatePoint(g, p, t);
+        g.fillOval(p[0],p[1],50,50);
+    }
+}
+
+/*<applet code="Q1.class" width="1000" height="1000"></applet>
+ */
+ 
+ 
+//Q2 2017
+import java.applet.Applet;
+import java.awt.*;
+
+public class Q2 extends Applet {
+    int centerX,centerY;
+    Q1 q1 = new Q1();
+    public void initgr(){
+        Dimension d = getSize();
+        centerX = d.width/2;
+        centerY = d.height/2;
+    }
+
+    public void reflect(int [][] point, char axis){
+        for(int i=0;i<point.length;i++){
+            switch (axis) {
+            case 'x':
+                // Reflect across the x-axis
+                point[i][1]=-1*point[i][1];
+                break;
+            case 'y':
+                // Reflect across the y-axis
+                point[i][0]=-1*point[i][0];
+                break;
+           
+        }
+        }
+    }
+   
+
+    public void drawTrangle(int [][]point,Graphics g){
+       
+        q1.dda(g,centerX+point[0][0] ,centerY+point[0][1] ,centerX+point[1][0] , centerY+point[1][1]);
+        q1.dda(g,centerX+point[1][0] ,centerY+point[1][1] ,centerX+point[2][0] , centerY+point[2][1]);
+        q1.dda(g,centerX+point[2][0] ,centerY+point[2][1] ,centerX+point[0][0] , centerY+point[0][1]);
+        
+    }
+
+    int [][] floatToInt (float [][] arr){
+        int rows = arr.length;
+        int col = arr[0].length;
+        int [][]arr2 = new int[rows][col];
+        
+        for(int i=0;i<rows;i++){
+            for(int j=0;j<col;j++){
+                arr2[i][j] = Math.round(arr[i][j]);
+                System.out.println(arr2[i][j]);
+            }
+        }
+        return arr2;
+    }
+
+    float [][] intToFloat (int [][] arr){
+        int rows = arr.length;
+        int col = arr[0].length;
+        float [][]arr2 = new float[rows][col];
+        
+        for(int i=0;i<rows;i++){
+            for(int j=0;j<col;j++){
+                arr2[i][j] = (float)(arr[i][j]);
+                //System.out.println(arr2[i][j]);
+            }
+        }
+        return arr2;
+    }
+    
+
+    public void paint(Graphics g){
+        initgr();
+        
+        int [][] t ={{0,200},{100,200},{100,0}};
+        int [][] t2 ={{0,200},{100,200},{100,0}};
+        drawTrangle(t, g);
+
+        int trans[] = {300,-300};
+        q1.traslateLine(g, t2,trans);
+        drawTrangle(t2, g);
+
+        float f[][] = intToFloat(t);
+        q1.rotate(f, 0,200,30);
+        int [][] arr =floatToInt(f);
+        int trans2[] = {300,-200};
+        q1.traslateLine(g, arr, trans2);
+        drawTrangle(arr, g);
+
+        int [][] scaled=new int[3][2];
+        int [] x = new int[1];
+        int [] y = new int[1];
+
+        for(int i=0;i<t.length;i++){
+            int x1,y1;
+            int temp = t[i][0];
+            x[0]= temp;
+            temp = t[i][1];
+            y[0]= temp;
+
+            q1.scale(g, x, y, 2, 2);
+            x1=x[0];
+            scaled[i][0] = x1;
+            y1=y[0];
+            scaled[i][1] = y1;
+        }
+        int trans3[] = {300,-10};
+        q1.traslateLine(g, scaled, trans3);
+        drawTrangle(scaled, g);
+
+
+       reflect(t, 'y');
+        drawTrangle(t, g);
+            
+    }
+    
+}
+
+/*<applet code="Q2.class" width="1000" height="1000"></applet>
+ */
+ 
+ 
+//translate rectangle.
+
+
+import java.util.Arrays;
+public class RectangleTranslator {
+    public static void translateRectangle(int[][] P, int[] T) {
+        for (int i = 0; i < P.length; i++) {
+            if (P[i].length != 2 || T.length != 2) {
+                throw new IllegalArgumentException("Each vertex and the translation vector must have two coordinates");
+            }
+
+            P[i][0] += T[0];
+            P[i][1] += T[1];
+        }
+    }
+
+    public static void main(String[] args) {
+        int[][] rectangle = {{1, 1}, {1, 4}, {4, 4}, {4, 1}};
+        int[] translation = {2, 3};
+
+        System.out.println("Original rectangle:");
+        for (int i = 0; i < rectangle.length; i++) {
+            System.out.println(Arrays.toString(rectangle[i]));
+        }
+
+        System.out.println("Translation vector: " + Arrays.toString(translation));
+
+        translateRectangle(rectangle, translation);
+
+        System.out.println("Translated rectangle:");
+        for (int i = 0; i < rectangle.length; i++) {
+            System.out.println(Arrays.toString(rectangle[i]));
+        }
+    }
+}
+
+
+//translate line
+
+import java.util.Arrays;
+public class LineTranslator {
+    public static void translateLine(int[][] P, int[] T) {
+        for (int i = 0; i < P.length; i++) {
+            if (P[i].length != 2 || T.length != 2) {
+                throw new IllegalArgumentException("Each point and the translation vector must have two coordinates");
+            }
+
+            P[i][0] += T[0];
+            P[i][1] += T[1];
+        }
+    }
+
+    public static void main(String[] args) {
+        int[][] line = {{1, 2}, {3, 4}, {5, 6}};
+        int[] translation = {4, 5};
+
+        System.out.println("Original line:");
+        for (int i = 0; i < line.length; i++) {
+            System.out.println(Arrays.toString(line[i]));
+        }
+
+        System.out.println("Translation vector: " + Arrays.toString(translation));
+
+        translateLine(line, translation);
+
+        System.out.println("Translated line:");
+        for (int i = 0; i < line.length; i++) {
+            System.out.println(Arrays.toString(line[i]));
+        }
+    }
+}
+
+
+
+//translate point
+import java.util.Arrays;
+public class PointTranslator{
+    public static void translatePoint(int[] P, int[] T) {
+        if (P.length != T.length) {
+            throw new IllegalArgumentException("Input arrays must have the same length");
+        }
+
+        for (int i = 0; i < P.length; i++) {
+            P[i] += T[i];
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] point = {1, 2, 3};
+        int[] translation = {4, 5, 6};
+
+        System.out.println("Original point: " + Arrays.toString(point));
+        System.out.println("Translation vector: " + Arrays.toString(translation));
+
+        translatePoint(point, translation);
+
+        System.out.println("Translated point: " + Arrays.toString(point));
+    }
+}
+
+
+//dda normal algorithm
+
+
+import java.util.Scanner;
+public class ddaAlg {
+    public static void ddaAlg(int x0, int y0, int xl, int yl) {
+        int dx = xl - x0;
+        int dy = yl - y0;
+
+        int steps = Math.max(Math.abs(dx), Math.abs(dy));
+
+        float xIncrement = (float) dx / steps;
+        float yIncrement = (float) dy / steps;
+
+        float x = x0;
+        float y = y0;
+
+        for (int i = 0; i <= steps; i++) {
+            System.out.println("(" + Math.round(x) + ", " + Math.round(y) + ")");
+            x += xIncrement;
+            y += yIncrement;
+        }
+    }
+
+    public static void main(String[] args) {
+		Scanner input = new Scanner (System.in);
+		
+		System.out.println("enter the coordinates of x0 - ");
+		int x0 = input.nextInt();
+		
+		System.out.println("enter the coordinates of y0 - ");
+		int y0 = input.nextInt();
+		
+		System.out.println("enter the coordinates of x1 - ");
+		int x1 = input.nextInt();
+		
+		System.out.println("enter the coordinates of y1 - ");
+		int y1 = input.nextInt();
+		
+        ddaAlg(x0, y0, x1, y1);
+    }
+} 
